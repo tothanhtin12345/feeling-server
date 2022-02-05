@@ -40,9 +40,7 @@ module.exports.createGraphAggregate = (year) => {
           //nhóm các dữ liệu theo cột month (mới tạo ở project)
           _id: "$month",
           //và đếm số lượng mỗi nhóm rồi gán vào viến monthCount
-          usersCount: {
-            $count: {$sum: 1},
-          },
+          count: {$sum: 1},
         },
       },
     ];
@@ -66,9 +64,9 @@ module.exports.createGraphAggregate = (year) => {
     //dữ liệu chỉ có 12 cột và chỉ kiểm tra điều kiện đơn giản nên ta chạy 2 vòng lặp cũng không gây ảnh nhiều đến hiệu suất
     monthData.forEach((i) => {
       data.forEach((j) => {
-        //nếu tìm thấy tháng trong dữ liệu data thì gán giá trị value = giá trị usersCount
+        //nếu tìm thấy tháng trong dữ liệu data thì gán giá trị value = giá trị count
         if (i.month === j._id) {
-          i.value = j.usersCount;
+          i.value = j.count;
         }
       });
     });
