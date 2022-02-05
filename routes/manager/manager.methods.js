@@ -41,7 +41,7 @@ module.exports.createGraphAggregate = (year) => {
           _id: "$month",
           //và đếm số lượng mỗi nhóm rồi gán vào viến monthCount
           usersCount: {
-            $count: {},
+            $count: {$sum: 1},
           },
         },
       },
