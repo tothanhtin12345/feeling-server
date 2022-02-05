@@ -1,0 +1,18 @@
+### get rooms - user - 1
+GET http://localhost:8000/room?skip=0&limit=0&messagesCount=2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWJiYTA5NTlhM2Q0MDFhN2MyOCJ9LCJpYXQiOjE2MjgxMzAyMjgsImV4cCI6MTYyODEzMzgyOH0.LU2m9Fpv4BV8m3ljNcSzOZ7AxCnxs7gupGiW9VZK_MU
+
+
+### get room details - user - 1
+GET http://localhost:8000/room/610590b4b7a26c2098e670e0
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWJiYTA5NTlhM2Q0MDFhN2MyOCJ9LCJpYXQiOjE2MjgxMzkzODUsImV4cCI6MTYyODE0Mjk4NX0.1On2excUXPp9nI1tjGFyCJeoC1xwpqO4_-Hji2lxL4A
+
+### get room details - user - 1 - by user and contact
+GET http://localhost:8000/room/individual?contactUserId=610a00d8b3a17f4084f404b9&messageSkip=0&messageLimit=1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWJiYTA5NTlhM2Q0MDFhN2MyOCJ9LCJpYXQiOjE2MjgxNjU2OTEsImV4cCI6MTYyODE2OTI5MX0.nXBnuczQ_YOVfuBjVipXgMPjlHq8eENZs7DBTgHS3b4
+
+
+

@@ -1,0 +1,91 @@
+### register - user 0
+POST http://localhost:8000/auth/register
+Content-Type: application/json
+
+{
+  "username":"tothanhtin1231",
+  "password":"123456"
+}
+
+
+### register - user 1
+POST http://localhost:8000/auth/register
+Content-Type: application/json
+
+{
+  "username":"tothanhtin123",
+  "password":"123456"
+}
+
+### register - user 2
+POST http://localhost:8000/auth/register
+Content-Type: application/json
+
+{
+  "username":"tothanhtin1234",
+  "password":"123456"
+}
+
+### register - user 3
+POST http://localhost:8000/auth/register
+Content-Type: application/json
+
+{
+  "username":"tothanhtin12345",
+  "password":"123456"
+}
+
+### login - user 0
+POST http://localhost:8000/auth/login
+Content-Type: application/json
+
+{
+  "username":"tothanhtin1231",
+  "password":"123456"
+}
+
+### login - user 1
+
+POST http://localhost:8000/auth/login
+Content-Type: application/json
+
+{
+  "username":"tothanhtin123",
+  "password":"123456"
+}
+
+### login - user 2
+
+POST http://localhost:8000/auth/login
+Content-Type: application/json
+
+{
+  "username":"tothanhtin1234",
+  "password":"123456"
+}
+
+### login - user 3
+
+POST http://localhost:8000/auth/login
+Content-Type: application/json
+
+{
+  "username":"tothanhtin12345",
+  "password":"123456"
+}
+
+### refresh
+POST http://localhost:8000/auth/refresh
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDU2NzU0Y2E4ZTJiMTQ0Y2YwMjFlZCJ9LCJpYXQiOjE2Mjc3NDQxMDcsImV4cCI6MTYyNzc0NzcwN30.LT14s8DGVw_fZbO061M4MDppxod5q--CqDw5fJcXnNU
+
+{
+  "refresh_token":"7SaceOR7Ejcm6WMr"
+}
+
+### verify
+GET http://localhost:8000/auth/verify
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWJiYTA5NTlhM2Q0MDFhN2MyOCJ9LCJpYXQiOjE2Mjc4NzIwNzQsImV4cCI6MTYyNzg3NTY3NH0.vVYlCbD6j1MmGNUAcJtBiIxXHdvIQiXjvTrN_wQ7ElM
+
+

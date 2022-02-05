@@ -1,0 +1,3 @@
+GET http://localhost:8000/manager/users-graph?year=2021&type=groups
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxNDJhNDZhN2JlMGU3NGZhNDhiNDllYSJ9LCJpYXQiOjE2NDA1MTkzNjgsImV4cCI6MTY0MDUyMjk2OH0.SqI6plM2BDx2cw9Vm6z3ulvua5Z5Tm57r8h6JH7HkKM

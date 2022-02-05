@@ -1,0 +1,164 @@
+
+### request friend - user - 0 - 1
+POST http://localhost:8000/user/friend-request/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDU2NzU0Y2E4ZTJiMTQ0Y2YwMjFlZCJ9LCJpYXQiOjE2Mjc4MjU5MzEsImV4cCI6MTYyNzgyOTUzMX0.UmkefJlOkkzIRAAgLXpHBhOJo2e_-ZEWPhjg3phIeyE
+
+{
+
+  "contactUserId":"6104dac0a0959a3d401a7c2b"
+}
+
+### request friend - user - 0 - 2
+POST http://localhost:8000/user/friend-request/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDU2NzU0Y2E4ZTJiMTQ0Y2YwMjFlZCJ9LCJpYXQiOjE2Mjc4MjU5MzEsImV4cCI6MTYyNzgyOTUzMX0.UmkefJlOkkzIRAAgLXpHBhOJo2e_-ZEWPhjg3phIeyE
+
+{
+
+  "contactUserId":"6104dac0a0959a3d401a7c2b"
+}
+
+### request friend - user - 1 - 2
+POST http://localhost:8000/user/friend-request/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWJiYTA5NTlhM2Q0MDFhN2MyOCJ9LCJpYXQiOjE2Mjc5MTgwOTgsImV4cCI6MTYyNzkyMTY5OH0.2uBvbjdcwX8erMGrgfYFlhHth-yYK5kj3gzARPHnJV4
+
+{
+
+  "contactUserId":"6104dac0a0959a3d401a7c2b"
+}
+
+
+### request friend - user - 2 - 1
+POST http://localhost:8000/user/friend-request/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWMwYTA5NTlhM2Q0MDFhN2MyYiJ9LCJpYXQiOjE2Mjc4MjUwMzEsImV4cCI6MTYyNzgyODYzMX0.bnZequ9Fl5JzJZU21hzuijR1RVhGghnfEYY6pkPMT_4
+
+{
+
+  "contactUserId":"6104dabba0959a3d401a7c28" 
+}
+
+### request friend - user - 2 - 3
+POST http://localhost:8000/user/friend-request/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWMwYTA5NTlhM2Q0MDFhN2MyYiJ9LCJpYXQiOjE2Mjc4MjUwMzEsImV4cCI6MTYyNzgyODYzMX0.bnZequ9Fl5JzJZU21hzuijR1RVhGghnfEYY6pkPMT_4
+
+{
+
+  "contactUserId":"61055730a54d332ff423c777" 
+}
+
+### request friend - user - 3 - 1
+POST http://localhost:8000/user/friend-request/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDU1NzMwYTU0ZDMzMmZmNDIzYzc3NyJ9LCJpYXQiOjE2Mjc3OTIyODYsImV4cCI6MTYyNzc5NTg4Nn0.xhanQbcg5FTRmCLs66NjV4Dac6CjdVJ9YZdfLNP0cXg
+
+{
+
+  "contactUserId":"6104dabba0959a3d401a7c28" 
+}
+
+
+
+### accept friend - user - 1 - to - 0
+POST http://localhost:8000/user/friend-accept/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWJiYTA5NTlhM2Q0MDFhN2MyOCJ9LCJpYXQiOjE2Mjc5MTgwOTgsImV4cCI6MTYyNzkyMTY5OH0.2uBvbjdcwX8erMGrgfYFlhHth-yYK5kj3gzARPHnJV4
+
+{
+  
+  "contactUserId":"61056754ca8e2b144cf021ed"
+}
+
+### accept friend - user - 1 - to - 2
+POST http://localhost:8000/user/friend-accept/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWJiYTA5NTlhM2Q0MDFhN2MyOCJ9LCJpYXQiOjE2Mjc5MTgwOTgsImV4cCI6MTYyNzkyMTY5OH0.2uBvbjdcwX8erMGrgfYFlhHth-yYK5kj3gzARPHnJV4
+
+{
+  
+  "contactUserId":"6104dac0a0959a3d401a7c2b"
+}
+
+### accept friend - user - 1 - to - 3
+POST http://localhost:8000/user/friend-accept/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWJiYTA5NTlhM2Q0MDFhN2MyOCJ9LCJpYXQiOjE2Mjc5MTgwOTgsImV4cCI6MTYyNzkyMTY5OH0.2uBvbjdcwX8erMGrgfYFlhHth-yYK5kj3gzARPHnJV4
+
+{
+  
+  "contactUserId":"61055730a54d332ff423c777"
+}
+
+### accept friend - user - 2 - to - 0
+POST http://localhost:8000/user/friend-accept/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWMwYTA5NTlhM2Q0MDFhN2MyYiJ9LCJpYXQiOjE2Mjc4MjUwMzEsImV4cCI6MTYyNzgyODYzMX0.bnZequ9Fl5JzJZU21hzuijR1RVhGghnfEYY6pkPMT_4
+
+{
+  
+  "contactUserId":"61056754ca8e2b144cf021ed"
+}
+
+### accept friend - user - 2 - to - 1
+POST http://localhost:8000/user/friend-accept/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWMwYTA5NTlhM2Q0MDFhN2MyYiJ9LCJpYXQiOjE2Mjc4MjUwMzEsImV4cCI6MTYyNzgyODYzMX0.bnZequ9Fl5JzJZU21hzuijR1RVhGghnfEYY6pkPMT_4
+
+{
+ 
+  "contactUserId":"6104dabba0959a3d401a7c28" 
+}
+
+### accept friend - user - 2 - to - 3
+POST http://localhost:8000/user/friend-accept/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWMwYTA5NTlhM2Q0MDFhN2MyYiJ9LCJpYXQiOjE2Mjc4MjUwMzEsImV4cCI6MTYyNzgyODYzMX0.bnZequ9Fl5JzJZU21hzuijR1RVhGghnfEYY6pkPMT_4
+
+{
+ 
+  "contactUserId":"61055730a54d332ff423c777" 
+}
+
+
+
+
+### accept friend - user - 3 - 2
+POST http://localhost:8000/user/friend-accept/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDU1NzMwYTU0ZDMzMmZmNDIzYzc3NyJ9LCJpYXQiOjE2Mjc3OTIyODYsImV4cCI6MTYyNzc5NTg4Nn0.xhanQbcg5FTRmCLs66NjV4Dac6CjdVJ9YZdfLNP0cXg
+
+{
+  
+  "contactUserId":"6104dac0a0959a3d401a7c2b" 
+}
+
+
+### fetch users - user - 1
+GET http://localhost:8000/user?username=t
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWJiYTA5NTlhM2Q0MDFhN2MyOCJ9LCJpYXQiOjE2Mjc5NjM5NjcsImV4cCI6MTYyNzk2NzU2N30.KM3YLVYRg6cRtckUmhDL0ZJ_2NOUlyPv7L9DCeDTx0c
+
+### fetch friend requests - user - 1
+GET http://localhost:8000/user/friend-request/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWJiYTA5NTlhM2Q0MDFhN2MyOCJ9LCJpYXQiOjE2Mjc5NjM5NjcsImV4cCI6MTYyNzk2NzU2N30.KM3YLVYRg6cRtckUmhDL0ZJ_2NOUlyPv7L9DCeDTx0c
+
+
+### friend request
+POST http://localhost:8000/user/friend-request
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWJiYTA5NTlhM2Q0MDFhN2MyOCJ9LCJpYXQiOjE2Mjc5MTgwOTgsImV4cCI6MTYyNzkyMTY5OH0.2uBvbjdcwX8erMGrgfYFlhHth-yYK5kj3gzARPHnJV4
+
+{
+  "contactUserId" : "61077029d2610a3b085909ae"
+}
+
+###
+//get friends - user - 1
+
+GET http://localhost:8000/user/friends?limit=10&username=a
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWJiYTA5NTlhM2Q0MDFhN2MyOCJ9LCJpYXQiOjE2MjgxNjU2OTEsImV4cCI6MTYyODE2OTI5MX0.nXBnuczQ_YOVfuBjVipXgMPjlHq8eENZs7DBTgHS3b4

@@ -1,0 +1,16 @@
+### pushMessage - user - 1
+POST http://localhost:8000/message/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWJiYTA5NTlhM2Q0MDFhN2MyOCJ9LCJpYXQiOjE2MjgwNDgxMzIsImV4cCI6MTYyODA1MTczMn0.buBzXFIHKJBCWJU_yiFJ3kQn8e2oOTBVnLS59otb5tI
+
+{
+  "text":"11456123 upbala bruh <br>dfdf<br>",
+  "type":"TEXT",
+  "roomId":"610a0108b3a17f4084f404d9"
+
+}
+
+### get messages - user - 1
+GET http://localhost:8000/message?roomId=6105909ab7a26c2098e670d1&limit=2&skip=2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjYxMDRkYWJiYTA5NTlhM2Q0MDFhN2MyOCJ9LCJpYXQiOjE2MjgwODkyNDUsImV4cCI6MTYyODA5Mjg0NX0.ScjEFLoKK87l1iJYmLeQw844-GRix7C8-U_EBxvPbRw
