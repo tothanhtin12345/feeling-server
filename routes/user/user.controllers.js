@@ -14,6 +14,7 @@ const {
   fetchFriendsSubdocuments,
   fetchFriends,
   fetchFriendsWithConversation,
+  getUserForList,
 } = require("./user.methods");
 
 const UserModel = require("../../models/user.models");
@@ -28,10 +29,12 @@ const {
   createConversation,
 } = require("../conversation/conversation.methods");
 
-const { getFile, removeFile, removeFileFromDB } = require("../file/file.methods");
+const {
+  getFile,
+  removeFile,
+  removeFileFromDB,
+} = require("../file/file.methods");
 const { getPost } = require("../post/post.methods");
-
-
 
 //cập nhật thông tin cá nhân
 module.exports.updateUserInformationHandler = async (req, res, next) => {
@@ -113,10 +116,10 @@ module.exports.updateCoverHandler = async (req, res, next) => {
 
     //trả về image post có hình đại diện vừa mới cập nhật
     return res.status(200).json({
-      imagePost:{
+      imagePost: {
         ...imagePost._doc,
         isOwner: true,
-      }
+      },
     });
   } catch (err) {
     console.log(err);
@@ -285,9 +288,16 @@ module.exports.sendFriendRequestHandler = async (req, res, next) => {
     await user.save();
     await contactUser.save();
 
+    let requestedUser = await getUserForList({
+      filter: { _id: user._id },
+    });
+    requestedUser.isRequested= true
+    
+
     res.locals.io.emit(`${contactUser._id.toString()}-friend-request`, {
       fromId: user._id,
       notification: notification._doc,
+      requestedUser,
     });
 
     return res.status(200).json({
@@ -312,6 +322,7 @@ module.exports.cancelFriendRequestHandler = async (req, res, next) => {
 
     res.locals.io.emit(`${contactUser._id.toString()}-cancel-friend-request`, {
       fromId: user._id,
+      userSentId: user._id,
     });
 
     return res.status(200).json({
@@ -336,6 +347,7 @@ module.exports.cancelFriendSentHandler = async (req, res, next) => {
 
     res.locals.io.emit(`${contactUser._id.toString()}-cancel-friend-sent`, {
       fromId: user._id,
+      userRequestId: user._id,
     });
 
     return res.status(200).json({
@@ -468,9 +480,22 @@ module.exports.acceptFriendHandler = async (req, res, next) => {
         .emit(`new-conversation`, newConversation);
     }
 
+    //lấy lại thông tin của người dùng được chấp nhận bạn bè để trả về
+
+    let acceptedUser = await getUserForList({
+      filter: { _id: contactUser._id },
+    });
+
+    acceptedUser.isFriend = true;
+    acceptedUser.isFollow = false;
+    if (user.following.includes(acceptedUser._id)) {
+      acceptedUser.isFollow = true;
+    }
+
     return res.status(200).json({
       message: "SUCCESS_ACCEPT_FRIEND",
       code: "SUCCESS_ACCEPT_FRIEND",
+      friend: acceptedUser,
     });
   } catch (err) {
     console.log(err);
@@ -495,6 +520,7 @@ module.exports.cancelFriendHandler = async (req, res, next) => {
 
     res.locals.io.emit(`${contactUser._id.toString()}-cancel-friend`, {
       fromId: user._id,
+      cancelUserId: user._id,
     });
 
     return res.status(200).json({
@@ -557,7 +583,6 @@ module.exports.fetchFriendsHandler = async (req, res, next) => {
       limit,
       displayName,
       path: "friends",
-    
     });
 
     const friendsData = result.friends;
@@ -710,7 +735,6 @@ module.exports.fetchTagFriendsHandler = async (req, res, next) => {
     };
 
     const result = await fetchFriends({
-   
       limit,
       filter,
     });
@@ -789,44 +813,43 @@ module.exports.deletePhotoHandler = async (req, res, next) => {
     //nếu phải thì xóa ảnh bìa - hoặc xóa ảnh đại diện ra khỏi user
     let isAvatar = false;
     let isCover = false;
-    if(avatar && avatar._id.toString() === post._id.toString()){
+    if (avatar && avatar._id.toString() === post._id.toString()) {
       isAvatar = true;
       user.avatar = undefined;
-    }
-    else if(cover && cover._id.toString() === post._id.toString()){
+    } else if (cover && cover._id.toString() === post._id.toString()) {
       isCover = true;
       user.cover = undefined;
     }
-    
 
     //kiểm tra xem là bài post có phải chỉ có 1 file (chính là file đang xét) và không có nội dung hay không
     // hoặc là nếu bài post là của một avatar hay cover thì cũng xóa luôn
     //nếu phải thì xóa luôn bài post
     //còn không thì chỉ cần xóa file trong bài post
     let deletePost = false;
-    if( isAvatar || isCover || post.files.length === 1 && (!post.content || post.content.trim().length <=0)){
+    if (
+      isAvatar ||
+      isCover ||
+      (post.files.length === 1 &&
+        (!post.content || post.content.trim().length <= 0))
+    ) {
       deletePost = true; //lát sẽ xét xem là nếu true => xóa cả bài post - false: xóa 1 file trong bài post
     }
-  
-
-   
 
     //nếu thỏa điều kiện xóa bài post thì thực hiện xóa cả bài post
     //ngược lại thì chỉ cần xóa file trong bài post
-    if(deletePost===true){
+    if (deletePost === true) {
       //xóa cả bài post
-      await PostModel.findOneAndDelete({_id: post._id})
-    }
-    else{
+      await PostModel.findOneAndDelete({ _id: post._id });
+    } else {
       //xóa file ra khỏi bài post
-      post.files.pull(fileId)
+      post.files.pull(fileId);
       await post.save();
     }
 
-     //xóa file trên server
-     await removeFile(file.path);
-     //xóa file trong csdl
-     await removeFileFromDB({filter:{_id:fileId}})
+    //xóa file trên server
+    await removeFile(file.path);
+    //xóa file trong csdl
+    await removeFileFromDB({ filter: { _id: fileId } });
 
     //lưu lại người dùng
     await user.save();
@@ -838,8 +861,7 @@ module.exports.deletePhotoHandler = async (req, res, next) => {
       postId: post._id,
       //trả về _id người thực hiện để ở dưới client dùng
       userId,
-    })
-
+    });
   } catch (err) {
     console.log(err);
     return next(createError(500, err.message || "ERROR_UNDEFINED"));

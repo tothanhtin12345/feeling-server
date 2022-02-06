@@ -13,6 +13,19 @@ module.exports.getUser = async ({ filter, select }) => {
   return user;
 };
 
+//hàm lấy thông tin của một user cho một danh sách
+module.exports.getUserForList = async ({filter, select="_id informations avatar"}) => {
+  let user =  await UserModel.findOne(filter)
+  .populate({
+    path: "avatar",
+    populate: "files",
+    select: "files",
+  })
+  .select(select)
+  user = user._doc;
+  return user;
+}
+
 //lấy danh sách bạn bè theo giá trị username - toán tử like
 module.exports.getUsers = async ({
   skip = 0,

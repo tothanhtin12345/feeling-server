@@ -23,7 +23,7 @@ const {
 
 const UserModel = require("../../models/user.models");
 
-const { fetchFriends } = require("../user/user.methods");
+const { fetchFriends, getUserForList } = require("../user/user.methods");
 
 //độ dài giới hạn của mô tả
 const maxDescriptionLength = 100;
@@ -31,7 +31,7 @@ const maxDescriptionLength = 100;
 //lấy danh sách nhóm đang quản lý
 module.exports.fetchGroupsManagingHandler = async (req, res, next) => {
   try {
-    const { displayName, skip = 0, limit = 10, lastId, } = req.query;
+    const { displayName, skip = 0, limit = 10, lastId } = req.query;
     const { _id } = req.user;
     //ta sẽ tìm những nhóm mà người dùng đã tạo ra (xem xét thêm là quản lý có bao gồm luôn những người kiểm duyệt không ?)
     const filter = {
@@ -314,6 +314,20 @@ module.exports.joinGroupRequestHandler = async (req, res, next) => {
 
     await groupDetails.save();
 
+    let userRequest = await getUserForList({
+      filter: { _id: userId },
+    });
+
+    userRequest.requestedAt = new Date();
+    userRequest.groupId = groupId;
+
+    res.locals.io.emit(`${groupId}`, {
+      type: "group_request",
+      data: {
+        userRequest,
+      },
+    });
+
     return res.status(200).json({
       groupId,
       //đánh dấu isSent: true để cập nhật lại dưới UI là người dùng đã gửi yêu cầu tham gia vào nhóm rồi
@@ -347,6 +361,13 @@ module.exports.cancelJoinGroupRequestHandler = async (req, res, next) => {
     groupDetails.requestedMemberCount -= 1;
 
     await groupDetails.save();
+
+    res.locals.io.emit(`${groupId}`, {
+      type: "group_request_cancel",
+      data: {
+        userRequestId: userId,
+      },
+    });
 
     return res.status(200).json({
       groupId,
@@ -396,8 +417,6 @@ module.exports.fetchJoinGroupRequestList = async (req, res, next) => {
       });
     });
 
-    console.log(final_list);
-
     return res.status(200).json({
       joinGroupRequestList: final_list,
     });
@@ -441,7 +460,13 @@ module.exports.acceptJoinGroupRequestHandler = async (req, res, next) => {
     });
 
     //lấy ra người dùng đó
-    const acceptedUser = await UserModel.findOne({ _id: userId });
+    let acceptedUser = await UserModel.findOne({ _id: userId })
+      .populate({
+        path: "avatar",
+        populate: "files",
+        select: "files",
+      })
+      .select("_id informations avatar unReadNotificationCount");
     //tăng số lượng thông báo chưa đọc của người dùng này lên 1
     acceptedUser.unReadNotificationCount += 1;
     await acceptedUser.save();
@@ -453,10 +478,25 @@ module.exports.acceptJoinGroupRequestHandler = async (req, res, next) => {
       notification: notification._doc,
     });
 
+    acceptedUser = acceptedUser._doc;
+    acceptedUser = {
+      ...acceptedUser,
+      isCurrentUser: false,
+      isInspector: false,
+      isManager: false,
+      groupId,
+    };
+
+    //nếu nguiowf dùng được chấp nhận đang ở nhóm luôn thì emit socket để thay đổi view
+    res.locals.io.emit(`${acceptedUser._id}-${groupId}`, {
+      type: "group_accept",
+    });
+
     return res.status(200).json({
       groupId,
       userId,
       message: "Accept is successful",
+      member: acceptedUser,
     });
   } catch (err) {
     return next(createError(500, err.message || "ERROR_UNDEFINED"));
@@ -761,18 +801,14 @@ module.exports.inviteUserToGroupHandler = async (req, res, next) => {
 
       const userChosenId = usersChosenId[i];
 
-     
       let isRequested = checkIsRequested({
         requestedMembers: groupDetails.requestedMembers,
-        userId:userChosenId,
+        userId: userChosenId,
       });
 
-      if (
-        !members.includes(userChosenId) &&
-        !isRequested
-      ) {
+      if (!members.includes(userChosenId) && !isRequested) {
         //thêm vào mảng requestedMembers
-        groupDetails.requestedMembers.push({_id:userChosenId});
+        groupDetails.requestedMembers.push({ _id: userChosenId });
         groupDetails.requestedMemberCount += 1;
 
         //lưu lại id của những người đã được mời thành công
@@ -948,5 +984,3 @@ module.exports.deleteGroupHandler = async (req, res, next) => {
     return next(createError(500, err.message || "ERROR_UNDEFINED"));
   }
 };
-
-
