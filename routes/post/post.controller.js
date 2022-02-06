@@ -1,5 +1,5 @@
 const createError = require("http-errors");
-const mongoose  = require('mongoose');
+const mongoose = require("mongoose");
 //code của mình
 const PostModel = require("../../models/post.models");
 const CommentModel = require("../../models/comment.models");
@@ -144,7 +144,7 @@ module.exports.editPostHandler = async (req, res, next) => {
 //chia sẻ một bài post
 module.exports.sharePostHandler = async (req, res, next) => {
   try {
-    const { sharedPost, content, tags=[] } = res.locals;
+    const { sharedPost, content, tags = [] } = res.locals;
 
     let { _id: userId } = req.user;
 
@@ -162,8 +162,6 @@ module.exports.sharePostHandler = async (req, res, next) => {
       newPostData,
     };
     const newPost = await addPost(req, res);
-
-
 
     for (let i = 0; i < tags.length; i++) {
       //
@@ -383,7 +381,24 @@ module.exports.fetchHomePostHandler = async (req, res, next) => {
         //chủ nhân là mình
         { owner: user._id },
         //hoặc là chủ nhân bài viết là user mà ta đang theo dõi
-        { owner: { $in: followingUsersId } },
+        //nhưng bài viết không thuộc nhóm
+        {
+          $and: [
+            { owner: { $in: followingUsersId } },
+            { group: { $exists: false } },
+          ],
+        },
+        //hoặc là chủ nhân bài viết là user mà ta đang theo dõi
+        //nhưng bài viết thuộc nhóm
+        //và ta phải là thành viên nhóm đó
+        {
+          $and: [
+            { owner: { $in: followingUsersId } },
+            { group: { $exists: true } },
+            { group: { $in: groupsId } },
+          ],
+        },
+
         // hoặc là bài viết thuộc nhóm mà ta đang tham gia
         { group: { $in: groupsId } },
       ],
@@ -397,6 +412,8 @@ module.exports.fetchHomePostHandler = async (req, res, next) => {
       role: user.role,
       lastId,
     });
+
+ 
 
     return res.status(200).json({
       posts,
@@ -441,43 +458,6 @@ module.exports.fetchCommentsPostHandler = async (req, res, next) => {
   }
 };
 
-// module.exports.getPostFormPhotoHandler = async (req, res, next) => {
-//   try {
-//     const { fileId } = req.query;
-//     const { _id: userId, role } = req.user;
-//     const posts = await fetchPost({
-//       filter: { files: { $in: [fileId] } },
-//       skip: 0,
-//       limit: 1,
-//       userId,
-//       role,
-//     });
-
-//     if (!posts || posts.length <= 0) {
-//       return res.status(404).json({
-//         message: "ERROR_POST_NOT_FOUND",
-//       });
-//     }
-
-//     const post = posts[0];
-
-//     // console.log(post)
-
-//     // console.log(post)
-
-//     //lấy ra file được chọn ban đầu
-//     const fileSelected = post.files.find(
-//       (item) => item._id.toString() === fileId
-//     );
-
-//     return res.status(200).json({
-//       post: { ...post, files: [fileSelected], comments: [] },
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     return next(createError(500, err.message || "ERROR_UNDEFINED"));
-//   }
-// };
 
 module.exports.getPostFormPhotoHandler = async (req, res, next) => {
   try {
@@ -736,8 +716,6 @@ module.exports.getLikeOwnerInformation = async (req, res, next) => {
   try {
     const { limit = 10, skip = 0, lastId, postId } = req.query;
 
-
-
     let match = {};
     if (lastId) {
       match = {
@@ -745,8 +723,6 @@ module.exports.getLikeOwnerInformation = async (req, res, next) => {
         _id: { $lt: lastId },
       };
     }
-
-    
 
     const result = await PostModel.findOne({ _id: postId })
       .populate({
@@ -760,37 +736,36 @@ module.exports.getLikeOwnerInformation = async (req, res, next) => {
           },
           select: "_id informations avatar",
         },
-      
+
         select: "owner emotion likeAt",
       })
-  
-      .select("likes")
-      
+
+      .select("likes");
+
     let likes = result.likes;
 
     //lấy ra những id bé hơn last id (nếu có)
-    if(lastId){
-      likes = likes.filter((item => item._id <  mongoose.Types.ObjectId(lastId)));
+    if (lastId) {
+      likes = likes.filter(
+        (item) => item._id < mongoose.Types.ObjectId(lastId)
+      );
     }
 
     //sắp xếp theo thứ tự giảm dần id
-    likes= likes.sort((a, b) => {
-      if(a._id > b._id){
+    likes = likes.sort((a, b) => {
+      if (a._id > b._id) {
         return -1;
-      }
-      else if (a._id < b._id){
+      } else if (a._id < b._id) {
         return 1;
       }
       return 0;
-    })
+    });
 
     let final = [];
     let count = 0;
     let i = 0;
-    while(i < likes.length){
-      
-      if(count == limit){
-        
+    while (i < likes.length) {
+      if (count == limit) {
         break;
       }
       final.push(likes[i]);
@@ -798,10 +773,7 @@ module.exports.getLikeOwnerInformation = async (req, res, next) => {
       i++;
     }
 
-
-   
-
-    return res.status(200).json({likes:final})
+    return res.status(200).json({ likes: final });
   } catch (err) {
     console.log(err);
     return next(createError(500, err.message || "ERROR_UNDEFINED"));

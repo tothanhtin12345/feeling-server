@@ -155,7 +155,13 @@ module.exports.fetchUsersSubDocumentInGroup = async ({
   skip,
   limit,
   displayName,
+  slicePath = null,
 }) => {
+  let pathToSlice = path;
+  if(slicePath !== null){
+    pathToSlice = slicePath;
+  }
+
   const list = await GroupModel.findOne({ _id:groupId, ...filter })
 
     .populate({
@@ -174,10 +180,12 @@ module.exports.fetchUsersSubDocumentInGroup = async ({
       select: "_id informations avatar",
     })
 
-    .select(path)
+    .select(pathToSlice)
 
     //dùng để slice để skip và limit cho subdocument
-    .slice(path, [Number.parseInt(skip), Number.parseInt(limit)]);
+    .slice(pathToSlice, [Number.parseInt(skip), Number.parseInt(limit)]);
+  
+   
 
   return list;
 };

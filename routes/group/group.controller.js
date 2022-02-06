@@ -397,24 +397,29 @@ module.exports.fetchJoinGroupRequestList = async (req, res, next) => {
       limit,
       path: "requestedMembers._id",
       displayName,
+      slicePath: "requestedMembers",
     });
 
     const dataList = joinGroupRequestListData.requestedMembers;
 
+ 
+
     //gắn thêm thông tin
     final_list = [];
     dataList.forEach((item) => {
-      final_list.push({
-        //một đối tượng trong mảng requestedMembers sẽ bao gồm _id chứa id của user
-        // và requestedAt: thời gian mà user yêu cầu tham gia
-        // do đó, ta phải populate requestedMembers._id để lấy thông tin mỗi user
-        // nên thằng _id sau khi populate sẽ chứa thông tin của user
-        ...item._id._doc,
-        requestedAt: item.requestedAt,
+      if (item._id !== null) {
+        final_list.push({
+          //một đối tượng trong mảng requestedMembers sẽ bao gồm _id chứa id của user
+          // và requestedAt: thời gian mà user yêu cầu tham gia
+          // do đó, ta phải populate requestedMembers._id để lấy thông tin mỗi user
+          // nên thằng _id sau khi populate sẽ chứa thông tin của user
+          ...item._id._doc,
+          requestedAt: item.requestedAt,
 
-        //ta gắn thêm groupId - để tiện cho phía UI có thể tương tác dễ hơn
-        groupId,
-      });
+          //ta gắn thêm groupId - để tiện cho phía UI có thể tương tác dễ hơn
+          groupId,
+        });
+      }
     });
 
     return res.status(200).json({

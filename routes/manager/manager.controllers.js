@@ -37,7 +37,7 @@ module.exports.fetchUsersManager = async (req, res, next) => {
         $regex: displayName,
       },
       email: {
-        $regex: displayName,
+        $regex: email,
       },
     };
 
