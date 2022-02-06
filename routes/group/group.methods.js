@@ -20,8 +20,6 @@ const membersPopulate = {
   select: "_id informations avatar",
 };
 
-
-
 //fetch danh sách nhóm theo điều kiện
 module.exports.fetchGroups = async ({
   skip = 0,
@@ -34,11 +32,11 @@ module.exports.fetchGroups = async ({
 }) => {
   //lấy danh sách nhóm cần phải lấy được đủ các thông tin về: ảnh bìa, tên nhóm
 
-  if(lastId){
+  if (lastId) {
     filter = {
       ...filter,
-      _id: {$lt: lastId},
-    }
+      _id: { $lt: lastId },
+    };
   }
 
   const list = await GroupModel.find({
@@ -48,11 +46,11 @@ module.exports.fetchGroups = async ({
     ...filter,
   })
     .populate({ path: "cover", populate: "files", select: "files" })
-    
+
     .skip(Number.parseInt(skip))
     .limit(Number.parseInt(limit))
     //lấy từ ngày mới nhất trở xuống
-    .sort({ createdAt: -1, _id: -1 , })
+    .sort({ createdAt: -1, _id: -1 })
     .select(select);
 
   const newList = list.map((item) => {
@@ -84,8 +82,8 @@ module.exports.fetchGroupsWithGroupOwnerDetail = async ({
     },
     ...filter,
   })
-    .populate({ path: "groupOwner", select:"informations _id" })
-    
+    .populate({ path: "groupOwner", select: "informations _id" })
+
     .skip(Number.parseInt(skip))
     .limit(Number.parseInt(limit))
     //lấy từ ngày mới nhất trở xuống
@@ -103,7 +101,6 @@ module.exports.fetchGroupsWithGroupOwnerDetail = async ({
 
   return newList;
 };
-
 
 //thêm một nhóm mới
 module.exports.addGroup = async (displayName, description, userId) => {
@@ -135,10 +132,12 @@ module.exports.getGroupDeatails = async ({
     //populate members
     .populate(membersPopulate)
 
-    .select(select);
-
-  //giới hạn số members lấy ra
-  //.slice("members", [Number.parseInt(membersSkip), Number.parseInt(membersLimit)]);
+    .select(select)
+    //giới hạn số members lấy ra
+    .slice("members", [
+      Number.parseInt(membersSkip),
+      Number.parseInt(membersLimit),
+    ]);
 
   if (!groupDetails) {
     throw new Error("ERROR_NOT_FOUND");
@@ -158,11 +157,11 @@ module.exports.fetchUsersSubDocumentInGroup = async ({
   slicePath = null,
 }) => {
   let pathToSlice = path;
-  if(slicePath !== null){
+  if (slicePath !== null) {
     pathToSlice = slicePath;
   }
 
-  const list = await GroupModel.findOne({ _id:groupId, ...filter })
+  const list = await GroupModel.findOne({ _id: groupId, ...filter })
 
     .populate({
       path: path,
@@ -184,16 +183,14 @@ module.exports.fetchUsersSubDocumentInGroup = async ({
 
     //dùng để slice để skip và limit cho subdocument
     .slice(pathToSlice, [Number.parseInt(skip), Number.parseInt(limit)]);
-  
-   
 
   return list;
 };
 
-
-//kiểm tra xem - một người có phải đã gửi yều cầu tham gia nhóm không 
-module.exports.checkIsRequested = ({userId, requestedMembers}) => {
-  let isRequested = requestedMembers.find((item)=>item._id.toString() === userId.toString());
+//kiểm tra xem - một người có phải đã gửi yều cầu tham gia nhóm không
+module.exports.checkIsRequested = ({ userId, requestedMembers }) => {
+  let isRequested = requestedMembers.find(
+    (item) => item._id.toString() === userId.toString()
+  );
   return isRequested;
-
-}
+};
