@@ -257,6 +257,7 @@ module.exports.fetchFriendsWithConversation = async ({
     },
   });
 
+  
   const friendsResult = [];
 
   //với mỗi friend - ta tìm kiếm kiếm _id conversation tương ứng giữa ta và friend đó
@@ -270,9 +271,7 @@ module.exports.fetchFriendsWithConversation = async ({
       select: "_id",
     });
 
-    if(!conversation){
-      console.log(friend)
-    }
+    
 
     friendsResult.push({
       ...friend._doc,
