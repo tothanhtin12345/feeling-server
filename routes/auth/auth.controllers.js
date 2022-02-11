@@ -59,15 +59,15 @@ module.exports.loginHandler = async (req, res, next) => {
 
     //nếu chưa kích hoạt thì báo lỗi
     //****tạm thời đóng để test dữ liệu
-    // if(!verifyEmail || !verifyEmail.isVerify){
+    if(!verifyEmail || !verifyEmail.isVerify){
 
-    //   //nếu không có cái verifyEmail ==> tài khoản cũ ==> chưa được gửi mail ==> tiến hành gửi
-    //   if(!verifyEmail){
-    //     await createEmailVerifyToken({ user: user, req }); 
-    //   }
+      //nếu không có cái verifyEmail ==> tài khoản cũ ==> chưa được gửi mail ==> tiến hành gửi
+      if(!verifyEmail){
+        await createEmailVerifyToken({ user: user, req }); 
+      }
 
-    //   return next(createError(400, "ERROR_ACCOUNT_NOT_VERIFY_EMAIL"));
-    // }
+      return next(createError(400, "ERROR_ACCOUNT_NOT_VERIFY_EMAIL"));
+    }
 
     //gọi hàm để tạo access_token - ta nhận được {access_token, expires_in, token_type}
     const token = generateAccessToken({ _id: user._id.toString() });
