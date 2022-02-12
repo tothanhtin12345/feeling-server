@@ -13,6 +13,7 @@ const {
   checkPostTypeToUpdatePublicFile,
   fetchComment,
   notifyWhenManagerInteractToPostInGroup,
+  deletePostMethod
 } = require("./post.methods");
 const { removeFile, removeFileFromDB } = require("../file/file.methods");
 const {
@@ -20,6 +21,8 @@ const {
   createNotificationForPost,
   createNotificationForGroup,
 } = require("../notification/notification.methods");
+
+
 
 //thêm một bài post - do chính người dùng thêm
 module.exports.addPostHandler = async (req, res, next) => {
@@ -180,6 +183,8 @@ module.exports.sharePostHandler = async (req, res, next) => {
       });
     }
 
+    newPost._doc.isOwner = true;
+
     return res.status(200).json({
       post: newPost._doc,
     });
@@ -196,27 +201,7 @@ module.exports.deletePostHandler = async (req, res, next) => {
     const { deletePostId } = req.query;
     const { user } = req;
 
-    const deleteResult = await PostModel.findOneAndDelete({
-      _id: deletePostId,
-    }).populate("files");
-
-    //lấy ra các file để chuẩn bị xóa trên storage
-    const files = deleteResult.files;
-
-    for (let i = 0; i < files.length; i++) {
-      //các item của filesToDelete đang ở dạng chuỗi json
-      //ta chuyển nó thành đôi tượng json
-      const file = files[i];
-
-      //xóa file ở storage
-      removeFile(file.path);
-      const filter = { _id: file._id };
-      //xóa file ở bảng File
-      await removeFileFromDB({ filter });
-    }
-
-    //xóa các comments thuộc về bài post có _id là deletePostId
-    await CommentModel.deleteMany({ post: deletePostId });
+    await deletePostMethod({deletePostId});
 
     //thực hiện một số hành động liên quan đến việc kiểm tra tương tác giữa manager với bài post trong nhóm (nếu có)
 

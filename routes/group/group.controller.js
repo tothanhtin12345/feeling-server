@@ -24,6 +24,7 @@ const {
 const UserModel = require("../../models/user.models");
 
 const { fetchFriends, getUserForList } = require("../user/user.methods");
+const { deletePostMethod } = require("../post/post.methods");
 
 //độ dài giới hạn của mô tả
 const maxDescriptionLength = 100;
@@ -267,6 +268,18 @@ module.exports.updateGroupCoverHandler = async (req, res, next) => {
     const { groupId } = req.body;
     const { imagePost, groupDetails } = res.locals;
 
+    /* xóa bài post có chứa cover của nhóm*/
+
+    // lấy ra cover của nhóm (một bài post)
+    const cover = groupDetails.cover;
+    let deletePostId = "";
+    // lấy id bài post và xóa bài post (nếu có)
+    if (cover) {
+      deletePostId = cover._id;
+      //tiến hành xóa
+      await deletePostMethod({ deletePostId });
+    }
+
     //lấy ra cái id của file vừa upload - và chuyển trạng thái public của nó thành false trong csdl để không hiển thị lên tường nhà
     //files này đã được xử lý và lưu trong req.body
     const { files } = req.body;
@@ -275,12 +288,14 @@ module.exports.updateGroupCoverHandler = async (req, res, next) => {
 
     groupDetails.cover = imagePost._id;
     await groupDetails.save();
+
     return res.status(200).json({
       imagePost: {
         ...imagePost._doc,
         isOwner: true,
       },
       groupId,
+      deletePostId,
     });
   } catch (err) {
     return next(createError(500, err.message || "ERROR_UNDEFINED"));
@@ -401,8 +416,6 @@ module.exports.fetchJoinGroupRequestList = async (req, res, next) => {
     });
 
     const dataList = joinGroupRequestListData.requestedMembers;
-
- 
 
     //gắn thêm thông tin
     final_list = [];

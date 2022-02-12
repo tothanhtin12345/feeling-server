@@ -2,7 +2,7 @@
 const PostModel = require("../../models/post.models");
 const CommentModel = require("../../models/comment.models");
 const UserModel = require("../../models/user.models");
-const { updateFile } = require("../file/file.methods");
+const { updateFile, removeFile, removeFileFromDB } = require("../file/file.methods");
 
 const {
   createNotificationForGroup,
@@ -123,11 +123,19 @@ module.exports.getPost = async ({ filter, select = "" }) => {
 
 //lấy ra nhiều bài post dựa theo các tham số
 //role là quyên của người dùng
-module.exports.fetchPost = async ({ filter, skip, limit, userId, role, isManager = false, lastId }) => {
-  if(lastId){
+module.exports.fetchPost = async ({
+  filter,
+  skip,
+  limit,
+  userId,
+  role,
+  isManager = false,
+  lastId,
+}) => {
+  if (lastId) {
     filter = {
       ...filter,
-      _id: {$lt: lastId},
+      _id: { $lt: lastId },
     };
   }
   const list = await PostModel.find(filter)
@@ -181,7 +189,7 @@ module.exports.fetchPost = async ({ filter, skip, limit, userId, role, isManager
       populate: { path: "cover", populate: "files", select: "files" },
       select: "informations cover _id",
     })
-    .sort({ createdAt: -1, _id: -1, })
+    .sort({ createdAt: -1, _id: -1 })
     .skip(Number.parseInt(skip))
     .limit(Number.parseInt(limit))
     .select("-comments -shares");
@@ -192,7 +200,9 @@ module.exports.fetchPost = async ({ filter, skip, limit, userId, role, isManager
     //kiểm tra xem người dùng đã like bài viết này chưa
     let isLike = (isOwner = isAdmin = false);
 
-    let ownerLike = item.likes.find((item)=>item.owner._id.toString() === userId.toString());
+    let ownerLike = item.likes.find(
+      (item) => item.owner._id.toString() === userId.toString()
+    );
     //dùng để hiển thị thị người dùng đã like theo cảm xúc nào
     let emotion;
 
@@ -224,10 +234,34 @@ module.exports.fetchPost = async ({ filter, skip, limit, userId, role, isManager
       comments: [],
       //giá trị kiểm tra xem post này có đang thực hiện load comment không
       commentLoading: false,
-      
     });
   });
   return listResult;
+};
+
+//xóa một bài post
+module.exports.deletePostMethod = async ({ deletePostId }) => {
+  const deleteResult = await PostModel.findOneAndDelete({
+    _id: deletePostId,
+  }).populate("files");
+
+  //lấy ra các file để chuẩn bị xóa trên storage
+  const files = deleteResult.files;
+
+  for (let i = 0; i < files.length; i++) {
+    //các item của filesToDelete đang ở dạng chuỗi json
+    //ta chuyển nó thành đôi tượng json
+    const file = files[i];
+
+    //xóa file ở storage
+    removeFile(file.path);
+    const filter = { _id: file._id };
+    //xóa file ở bảng File
+    await removeFileFromDB({ filter });
+  }
+
+  //xóa các comments thuộc về bài post có _id là deletePostId
+  await CommentModel.deleteMany({ post: deletePostId });
 };
 
 module.exports.fetchComments = async ({
@@ -318,14 +352,12 @@ module.exports.notifyWhenManagerInteractToPostInGroup = async ({
   content,
   type,
 }) => {
-
   const post = res.locals.currentPost;
   const user = req.user;
 
   //kiểm tra xem - bài post có phải thuộc group không ?
   if (!post.group) return;
 
-  
   //vì quản trị viên có thể xóa bài post của một thành viên (đã kiểm trả ở middleware)
   // nên ta kiểm tra xem là nếu người hiện tại đang xóa bài viết != chủ nhân bài viết
   // và chủ nhân bài viết hiện vẫn đang ở trong group (vẫn là members của group)
