@@ -67,7 +67,7 @@ module.exports.forgotPasswordValidator = [
     .withMessage("ERROR_USERNAME_EMPTY")
     .notEmpty()
     .withMessage("ERROR_USERNAME_EMPTY")
-    .isLength({ min: 6 })
+    .isLength({ min: 5 })
     .withMessage("ERROR_USERNAME_MINIMUM_5")
     .isLength({ max: 26 })
     .withMessage("ERROR_USERNAME_MAXIMUM_26"),
