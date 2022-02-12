@@ -15,7 +15,7 @@ module.exports.registerValidator = [
     .withMessage("ERROR_USERNAME_EMPTY")
     .notEmpty()
     .withMessage("ERROR_USERNAME_EMPTY")
-    .isLength({ min: 6 })
+    .isLength({ min: 5 })
     .withMessage("ERROR_USERNAME_MINIMUM_5")
     .isLength({ max: 26 })
     .withMessage("ERROR_USERNAME_MAXIMUM_26"),
@@ -45,7 +45,7 @@ module.exports.loginValidator = [
     .withMessage("ERROR_USERNAME_EMPTY")
     .notEmpty()
     .withMessage("ERROR_USERNAME_EMPTY")
-    .isLength({ min: 6 })
+    .isLength({ min: 5 })
     .withMessage("ERROR_USERNAME_MINIMUM_5")
     .isLength({ max: 26 })
     .withMessage("ERROR_USERNAME_MAXIMUM_26"),
@@ -87,7 +87,7 @@ module.exports.verificationCodeValidator = [
     .withMessage("ERROR_USERNAME_EMPTY")
     .notEmpty()
     .withMessage("ERROR_USERNAME_EMPTY")
-    .isLength({ min: 6 })
+    .isLength({ min: 5 })
     .withMessage("ERROR_USERNAME_MINIMUM_5")
     .isLength({ max: 26 })
     .withMessage("ERROR_USERNAME_MAXIMUM_26"),
@@ -111,7 +111,7 @@ module.exports.newPasswordValidator = [
     .withMessage("ERROR_USERNAME_EMPTY")
     .notEmpty()
     .withMessage("ERROR_USERNAME_EMPTY")
-    .isLength({ min: 6 })
+    .isLength({ min: 5 })
     .withMessage("ERROR_USERNAME_MINIMUM_5")
     .isLength({ max: 26 })
     .withMessage("ERROR_USERNAME_MAXIMUM_26"),
