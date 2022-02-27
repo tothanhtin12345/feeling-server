@@ -132,12 +132,7 @@ module.exports.getGroupDeatails = async ({
     //populate members
     .populate(membersPopulate)
 
-    .select(select)
-    //giới hạn số members lấy ra
-    .slice("members", [
-      Number.parseInt(membersSkip),
-      Number.parseInt(membersLimit),
-    ]);
+    .select(select);
 
   if (!groupDetails) {
     throw new Error("ERROR_NOT_FOUND");

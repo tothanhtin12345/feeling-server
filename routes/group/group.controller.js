@@ -221,6 +221,7 @@ module.exports.getGroupDetailsHandler = async (req, res, next) => {
         isManager,
         isSent,
         isInspector,
+        members: groupDetails.members.slice(0,5),
       },
     });
   } catch (err) {
